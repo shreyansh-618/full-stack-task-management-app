@@ -29,14 +29,19 @@ const LoginPopup = ({ setShowLogin }) => {
       newUrl += "/api/user/register";
     }
 
-    const response = await axios.post(newUrl, data);
+    try {
+      const response = await axios.post(newUrl, data);
 
-    if (response.data.success) {
-      setToken(response.data.token);
-      localStorage.setItem("token", response.data.token);
-      setShowLogin(false);
-    } else {
-      alert(res.data.message);
+      if (response.data.success) {
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+        setShowLogin(false);
+      } else {
+        alert(response.data.message); // Corrected from res to response
+      }
+    } catch (error) {
+      console.error("Error during the API request:", error);
+      alert("An error occurred. Please try again later.");
     }
   };
 
@@ -48,7 +53,7 @@ const LoginPopup = ({ setShowLogin }) => {
           <img
             onClick={() => setShowLogin(false)}
             src={assets.cross_icon}
-            alt=""
+            alt="Close"
           />
         </div>
         <div className="login-popup-inputs">
@@ -87,7 +92,7 @@ const LoginPopup = ({ setShowLogin }) => {
         <div className="login-popup-condition">
           <input type="checkbox" required />
           <p className="continuee">
-            By continuing, i agree to the terms of use & privacy policy
+            By continuing, I agree to the terms of use & privacy policy
           </p>
         </div>
         {currState === "Login" ? (
